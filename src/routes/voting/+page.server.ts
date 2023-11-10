@@ -54,13 +54,13 @@ export const actions = {
 				formData.forEach(async (value, key) => {
 					if (key !== 'student_id') {
 						await pb.collection('votes').create({
-							student: studentId,
 							candidate: value,
 							position: key
 						});
 					}
 				});
-				await pb.collection('students').update(studentId, {
+				await pb.collection('voted').create({
+					uucms_id: studentInfo.uucms_id,
 					voted: true
 				});
 			} catch (err) {

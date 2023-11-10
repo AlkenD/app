@@ -21,14 +21,23 @@
 	let isOpen: boolean = false;
 	let dialog: HTMLDialogElement | null = null;
 	let currentStudent: Student | null | string = 'Search Student...';
+	let checkUUCMSID: any;
 
 	let disabled: boolean = true;
 
 	const getStudent = async () => {
 		try {
-			const response: Student[] = await pb.collection('students').getFullList();
-			currentStudent = response.find((student) => student.uucms_id === query) || null;
-			disabled = !currentStudent;
+			const response1: Student[] = await pb.collection('students').getFullList();
+			const response2: any = await pb.collection('voted').getFullList();
+
+			currentStudent = response1.find((student) => student.uucms_id === query) || null;
+			checkUUCMSID = response2.find((status: any) => status.uucms_id === query) || null;
+			if (
+				checkUUCMSID === null ||
+				(currentStudent?.uucms_id === checkUUCMSID?.uucms_id && checkUUCMSID?.voted === false)
+			) {
+				disabled = false;
+			}
 		} catch (error) {
 			console.error('Error fetching student data:', error);
 		}
@@ -59,7 +68,7 @@
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
-		<header>Confirm Student ?</header>
+		<header class="font-semibold text-2xl text-yellow-500">Confirm Student ?</header>
 		<div class="flex space-x-4 pt-2">
 			<Button variant="secondary" on:click={() => dialog?.close()}>No</Button>
 			<Button on:click={confirmStudent}>Yes</Button>
@@ -99,6 +108,11 @@
 		</div>
 	</div>
 	<section class="p-4 bg-zinc-200 rounded-lg divide-y">
+		{#if checkUUCMSID !== null && currentStudent?.uucms_id === checkUUCMSID?.uucms_id && checkUUCMSID?.voted === true}
+			<div class="text-xl text-center p-4 rounded-lg bg-red-500 font-bold">
+				Warning: You are not permitted to revote.
+			</div>
+		{/if}
 		{#if currentStudent !== null && typeof currentStudent !== 'string'}
 			<table class="text-left">
 				<tr>
@@ -110,7 +124,7 @@
 				</tr>
 				<tr>
 					<th>NAME:</th>
-					<td>{currentStudent.name || ''}</td>
+					<td class="font-bold text-indigo-500">{currentStudent.name || ''}</td>
 				</tr>
 				<tr>
 					<th>CLASS:</th>

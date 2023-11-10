@@ -69,7 +69,13 @@
 									<div class="w-full">
 										<div class="text-2xl font-semibold text-black">{candidate.name}</div>
 										<div class="text-lg font-bold text-indigo-700">
-											{candidate.semester}th Semester
+											{#if candidate.semester === '5'}
+												5th Semester
+											{:else if candidate.semester === '3'}
+												3rd Semester
+											{:else}
+												1st Semester
+											{/if}
 										</div>
 									</div>
 									<input required name={candidate.position} type="radio" value={candidate.id} />
@@ -88,7 +94,7 @@
 
 <style>
 	fieldset {
-		@apply space-y-2 bg-indigo-200 rounded-lg overflow-hidden;
+		@apply space-y-2 bg-indigo-100 rounded-lg overflow-hidden;
 	}
 
 	ul {

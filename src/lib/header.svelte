@@ -33,10 +33,4 @@
 		<h1 class="text-4xl">St. Francis College</h1>
 		<p>8th Main, 3rd Block Koramangala, Bangalore, 560034</p>
 	</div>
-	{#if student && Object.keys(student).length !== 0}
-		<div class="font-bold">
-			<div>UUCMSID: {student.uucms_id}</div>
-			<div>Name: {student.name}</div>
-		</div>
-	{/if}
 </header>
