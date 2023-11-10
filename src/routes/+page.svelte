@@ -17,7 +17,8 @@
 		voted: boolean;
 	}
 
-	let query: string = '';
+	let userInput: string = '';
+	let query = userInput.toUpperCase();
 	let isOpen: boolean = false;
 	let dialog: HTMLDialogElement | null = null;
 	let currentStudent: Student | null | string = 'Search Student...';
@@ -78,14 +79,14 @@
 
 <div class="max-w-[600px] mx-auto p-4 space-y-2">
 	<div class="space-y-2">
-		<label class="font-semibold text-sm" for="query">UUCMS ID</label>
+		<label class="font-semibold text-sm" for="userInput">UUCMS ID</label>
 		<div class="flex space-x-2">
 			<input
 				placeholder="Enter your UUCMS ID"
-				id="query"
-				class="p-4 bg-zinc-200 rounded-lg w-full font-semibold"
+				id="userInput"
+				class="p-4 bg-zinc-200 rounded-lg w-full font-semibold uppercase"
 				type="text"
-				bind:value={query}
+				bind:value={userInput}
 			/>
 			<Button size="fit" on:click={getStudent}
 				><svg
