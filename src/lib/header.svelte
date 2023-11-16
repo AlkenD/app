@@ -29,8 +29,11 @@
 
 <header class="flex items-center justify-between relative p-4 overflow-hidden">
 	<img class="w-20 h-20 aspect-square" src="/sfclogo.png" alt="" />
-	<div class="text-center absolute left-0 right-0 mx-auto">
+	<div class="text-center absolute left-0 right-0 mx-auto w-fit">
 		<h1 class="text-4xl">St. Francis College</h1>
 		<p>8th Main, 3rd Block Koramangala, Bangalore, 560034</p>
+	</div>
+	<div>
+		<slot />
 	</div>
 </header>

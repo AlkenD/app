@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import pb from '$lib/pb';
+	import { pb } from '$lib/pb';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/button.svelte';
 
@@ -20,23 +20,26 @@
 	let query = '';
 	let isOpen: boolean = false;
 	let dialog: HTMLDialogElement | null = null;
-	let currentStudent: Student | null | string = 'Search Student...';
+	let currentStudent: Student | string | undefined = 'Search Student...';
 	let checkUUCMSID: any;
-
-	let disabled: boolean = true;
+	let disabled = true;
 
 	const getStudent = async () => {
 		try {
 			const response1: Student[] = await pb.collection('students').getFullList();
 			const response2: any = await pb.collection('voted').getFullList();
 
-			currentStudent = response1.find((student) => student.uucms_id === query) || null;
-			checkUUCMSID = response2.find((status: any) => status.uucms_id === query) || null;
-			if (
-				checkUUCMSID === null ||
-				(currentStudent?.uucms_id === checkUUCMSID?.uucms_id && checkUUCMSID?.voted === false)
-			) {
-				disabled = false;
+			const queryUpperCase = query.toUpperCase();
+
+			currentStudent = response1.find((student) => student.uucms_id === queryUpperCase);
+			checkUUCMSID = response2.find((status: any) => status.uucms_id === queryUpperCase);
+
+			if (typeof currentStudent !== 'string' && typeof currentStudent !== 'undefined') {
+				if (checkUUCMSID && checkUUCMSID.voted === true) {
+					disabled = true;
+				} else {
+					disabled = false;
+				}
 			}
 		} catch (error) {
 			console.error('Error fetching student data:', error);
@@ -108,12 +111,12 @@
 		</div>
 	</div>
 	<section class="p-4 bg-zinc-200 rounded-lg divide-y">
-		{#if checkUUCMSID !== null && currentStudent?.uucms_id === checkUUCMSID?.uucms_id && checkUUCMSID?.voted === true}
+		{#if typeof currentStudent !== 'string' && typeof currentStudent !== 'undefined' && checkUUCMSID?.voted === true}
 			<div class="text-xl text-center p-4 rounded-lg bg-red-500 font-bold">
 				Warning: You are not permitted to revote.
 			</div>
 		{/if}
-		{#if currentStudent !== null && typeof currentStudent !== 'string'}
+		{#if typeof currentStudent !== 'string' && typeof currentStudent !== 'undefined'}
 			<table class="text-left">
 				<tr>
 					<th class="text-blue-500">Student Details</th>

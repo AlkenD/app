@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import pb from '$lib/pb';
+import { pb } from '$lib/pb';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const presidentCandidates = await pb.collection('candidates').getFullList({
@@ -31,13 +31,15 @@ export const load: PageServerLoad = async ({ params }) => {
 		filter: 'position = "assistant-sports-secretary"'
 	});
 	return {
-		presidentCandidates: presidentCandidates,
-		vicePresidentCandidates: vicePresidentCandidates,
-		generalSecretaryCandidates: generalSecretaryCandidates,
-		culturalSecretaryCandidates: culturalSecretaryCandidates,
-		assistantCulturalSecretaryCandidates: assistantCulturalSecretaryCandidates,
-		sportsSecretaryCandidates: sportsSecretaryCandidates,
-		assistantSportsSecretaryCandidates: assistantSportsSecretaryCandidates
+		candidates: {
+			presidentCandidates: presidentCandidates,
+			vicePresidentCandidates: vicePresidentCandidates,
+			generalSecretaryCandidates: generalSecretaryCandidates,
+			culturalSecretaryCandidates: culturalSecretaryCandidates,
+			assistantCulturalSecretaryCandidates: assistantCulturalSecretaryCandidates,
+			sportsSecretaryCandidates: sportsSecretaryCandidates,
+			assistantSportsSecretaryCandidates: assistantSportsSecretaryCandidates
+		}
 	};
 };
 

@@ -1,7 +1,7 @@
 <script>
 	import Button from '$lib/button.svelte';
 	const clearUser = async () => {
-		localStorage.clear();
+		localStorage.removeItem('student');
 	};
 </script>
 

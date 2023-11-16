@@ -2,7 +2,9 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/button.svelte';
+	import { currentUser } from '$lib/pb.js';
 	import { onMount } from 'svelte';
+	import { PUBLIC_SERVER } from '$env/static/public';
 
 	export let data;
 
@@ -13,14 +15,18 @@
 	$: if (dialog && isOpen) dialog.showModal();
 
 	onMount(() => {
-		if (browser) {
+		if (browser && $currentUser) {
 			if (localStorage.getItem('student') === null) {
 				goto('/');
 			} else {
 				currentStudent = JSON.parse(localStorage.getItem('student') || '');
 			}
+		} else {
+			goto('/login');
 		}
 	});
+
+	let candidates = data.candidates;
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
@@ -43,7 +49,7 @@
 {#if currentStudent}
 	<form id="candidatesForm" class="max-w-[600px] mx-auto p-4 space-y-12" method="POST">
 		<input class="hidden" name="student_id" type="text" value={currentStudent.id} />
-		{#each Object.keys(data) as category, index}
+		{#each Object.keys(candidates) as category, index}
 			<fieldset>
 				<div class="bg-indigo-300 p-4">
 					<h1 class="text-2xl font-semibold text-indigo-700">
@@ -55,14 +61,14 @@
 					</h1>
 				</div>
 				<ul>
-					{#if Array.isArray(data[category])}
-						{#each data[category] as candidate}
+					{#if Array.isArray(candidates[category])}
+						{#each candidates[category] as candidate}
 							<li>
 								<label class="flex space-x-4">
 									<div class="aspect-square w-60 rounded-lg overflow-hidden ring ring-indigo-500">
 										<img
 											class="object-cover w-full h-full"
-											src={`http://localhost:8090/api/files/rvtayhlqzm64xkc/${candidate.id}/${candidate.photo}?token=`}
+											src={`${PUBLIC_SERVER}/api/files/rvtayhlqzm64xkc/${candidate.id}/${candidate.photo}?token=`}
 											alt=""
 										/>
 									</div>

@@ -1,18 +1,6 @@
 <script lang="ts">
-	import pb from '$lib/pb.js';
+	import { currentUser, pb } from '$lib/pb.js';
 	import { onMount } from 'svelte';
-
-	let email: string;
-	let password: string;
-	async function loginUser() {
-		await fetch('/api/add', {
-			method: 'POST',
-			body: JSON.stringify({ email, password }),
-			headers: {
-				'content-type': 'application/json'
-			}
-		});
-	}
 
 	export let data;
 
@@ -41,16 +29,13 @@
 		}
 
 		countMap.forEach((count, key) => {
-			console.log(`Position and Candidate ID: ${key}, Count: ${count}`);
+			console.log(`Position and Candidate Name: ${key}, Count: ${count}`);
 		});
 	}
 
 	onMount(() => {
-		// Call the processVotes function when the component is mounted
-		processVotes();
+		if ($currentUser.admin === true) {
+			processVotes();
+		}
 	});
 </script>
-
-<div>
-	<div />
-</div>
